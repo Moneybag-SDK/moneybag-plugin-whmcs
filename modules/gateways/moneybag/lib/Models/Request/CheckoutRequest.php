@@ -143,8 +143,10 @@ class MoneybagSdk_CheckoutRequest
                     $data[$api_key] = $items_array;
                 }
             } else {
-                // Skip empty string values that should be null (like ipn_url)
-                if ($value === '') {
+                // Skip unset optional fields. The Moneybag API rejects
+                // explicit nulls (e.g. ipn_url/shipping/metadata) with a 500,
+                // so omit them entirely rather than sending null/"".
+                if ($value === '' || $value === null) {
                     continue;
                 }
                 $data[$api_key] = $value;
@@ -187,8 +189,8 @@ class MoneybagSdk_CheckoutRequest
                 }
                 $data[$api_key] = $items_array;
             } else {
-                // Skip empty string values that should be null (like ipn_url)
-                if ($value === '') {
+                // Skip unset optional fields (see toJson()).
+                if ($value === '' || $value === null) {
                     continue;
                 }
                 $data[$api_key] = $value;

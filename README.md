@@ -26,11 +26,9 @@ Accept secure payments for hosting, domains, and recurring services in Banglades
 - PHP cURL extension enabled
 - A Moneybag merchant account and API key
 
-## Installation
+## Quick Install
 
-1. Download or clone this repository.
-2. Copy the contents of the `modules/` directory into your WHMCS installation's
-   `modules/` directory, preserving the structure:
+1. Copy the `modules/` tree into your WHMCS root, preserving structure:
 
    ```
    <whmcs>/modules/gateways/moneybag.php
@@ -38,15 +36,14 @@ Accept secure payments for hosting, domains, and recurring services in Banglades
    <whmcs>/modules/gateways/moneybag/lib/...
    ```
 
-3. In the WHMCS admin area, go to **Configuration → System Settings →
-   Payment Gateways** (or **Setup → Payments → Payment Gateways** on older
-   versions).
-4. Under **All Payment Gateways**, click **Moneybag Payment Gateway** to activate it.
-5. Configure the module:
-   - **Merchant API Key** — your Moneybag `X-Merchant-API-Key`.
-   - **Environment** — `Staging / Sandbox` for testing, `Production (Live)` for real payments.
-   - **Debug Logging** — enable while testing, disable in production.
-6. Click **Save Changes**.
+2. In WHMCS admin: **Configuration → System Settings → Payment Gateways →
+   All Payment Gateways → Moneybag Payment Gateway** to activate.
+3. Set **Merchant API Key**, **Environment** (`Staging` first), and
+   **Debug Logging**, then **Save Changes**.
+4. Test a sandbox invoice, then switch to **Production (Live)**.
+
+📖 Full step-by-step guide, including go-live and troubleshooting:
+**[INSTALL.md](INSTALL.md)**
 
 ## How It Works
 
