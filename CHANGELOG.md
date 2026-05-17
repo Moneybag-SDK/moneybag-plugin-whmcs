@@ -5,6 +5,35 @@ in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2026-05-17
+
+First stable release. Folds in all beta fixes; verified end-to-end against
+the Moneybag sandbox.
+
+### Added
+
+- Moneybag hosted-checkout gateway for WHMCS (`moneybag_link`).
+- Callback handler with browser-redirect **and** server-to-server IPN
+  support, with independent payment **re-verification** before
+  `addInvoicePayment()`.
+- Staging / Production environment switch and optional debug logging.
+- Bundled, self-contained Moneybag PHP SDK (native cURL — no Composer or
+  Guzzle required on the WHMCS host).
+- `moneybag_refund()` stub returning a declined status (manual refunds
+  via the Moneybag dashboard).
+- `INSTALL.md` integration guide and a zero-dependency test suite
+  (offline structural tests + live sandbox e2e).
+
+### Fixed
+
+- `order_id` is built as `WHMCS` + zero-padded invoice id
+  (e.g. invoice 42 → `WHMCS00042`), guaranteeing Moneybag's
+  **10-character minimum** while staying unique 1:1 with the invoice
+  (no upper bound on invoice count).
+- Bundled `CheckoutRequest` no longer serialises unset optional fields
+  (`ipn_url`, `shipping`, `order_items`, `payment_info`, `metadata`) as
+  explicit `null`, which the Moneybag API rejected with HTTP 500.
+
 ## [1.0.0-beta.2] - 2026-05-17
 
 ### Fixed

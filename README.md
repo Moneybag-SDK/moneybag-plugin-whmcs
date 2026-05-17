@@ -7,8 +7,9 @@
 Official [Moneybag](https://moneybag.com.bd) payment gateway module for **WHMCS**.
 Accept secure payments for hosting, domains, and recurring services in Bangladesh.
 
-> ⚠️ **Beta Release**: This module bundles a beta build of the Moneybag PHP SDK.
-> Test thoroughly in the staging environment before going live.
+> ℹ️ **v1.0.0** — first stable release, verified end-to-end against the
+> Moneybag sandbox. It bundles a pre-1.0 build of the Moneybag PHP SDK; as
+> with any payment gateway, test in the staging environment before going live.
 
 ## Features
 
