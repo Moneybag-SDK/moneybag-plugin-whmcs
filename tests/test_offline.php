@@ -64,6 +64,18 @@ t_ok(strpos($url, 'invoice_id=1042') !== false, 'Callback URL carries invoice_id
 t_ok(strpos($url, 'status=success') !== false, 'Callback URL carries status');
 
 /* --------------------------------------------------------------------- */
+t_section('order_id meets Moneybag 10-char minimum');
+
+$oidShort = _moneybag_order_id(42);
+$oidOne   = _moneybag_order_id(1);
+$oidBig   = _moneybag_order_id(1234567);
+
+t_equals('WHMCS00042', $oidShort, 'Short invoice id is prefixed and zero-padded');
+t_ok(strlen($oidOne) >= 10, 'Single-digit invoice id yields >= 10 chars');
+t_ok(strlen($oidShort) >= 10, 'Typical invoice id yields >= 10 chars');
+t_ok(strlen($oidBig) >= 10 && strpos($oidBig, '1234567') !== false, 'Large invoice id stays >= 10 and traceable');
+
+/* --------------------------------------------------------------------- */
 t_section('CheckoutRequest assembles a valid payload');
 
 $customer = new MoneybagSdk_Customer();

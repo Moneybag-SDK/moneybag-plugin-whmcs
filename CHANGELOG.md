@@ -5,6 +5,16 @@ in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0-beta.2] - 2026-05-17
+
+### Fixed
+
+- `order_id` is now built as `WHMCS` + zero-padded invoice id
+  (e.g. invoice 42 → `WHMCS00042`), guaranteeing the **10-character
+  minimum** Moneybag requires. Previously the raw WHMCS invoice id
+  (often 1–5 digits) was sent, which Moneybag rejects. Verified
+  end-to-end against the Moneybag sandbox with a short invoice id.
+
 ## [1.0.0-beta.1] - 2026-05-17
 
 ### Added

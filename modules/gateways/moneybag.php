@@ -120,7 +120,7 @@ function moneybag_link($params)
         $customer->setPhone($phone !== '' ? $phone : '+8800000000000');
 
         $request = new MoneybagSdk_CheckoutRequest();
-        $request->setOrderId((string) $invoiceId);
+        $request->setOrderId(_moneybag_order_id($invoiceId));
         $request->setCurrency(strtoupper($currency));
         $request->setOrderAmount(number_format((float) $amount, 2, '.', ''));
         $request->setOrderDescription('Invoice #' . $invoiceId);
@@ -179,6 +179,29 @@ function moneybag_refund($params)
             . 'Moneybag merchant dashboard. Automated refunds are not supported '
             . 'by the gateway API yet.',
     ];
+}
+
+/**
+ * Build a Moneybag order_id from a WHMCS invoice id.
+ *
+ * Moneybag requires order_id to be at least 10 characters, but WHMCS invoice
+ * IDs are short integers (often 1-5 digits). We prefix with "WHMCS" and
+ * zero-pad the invoice id to a minimum of 5 digits, guaranteeing >= 10
+ * characters (e.g. invoice 42 -> "WHMCS00042") while keeping it deterministic
+ * and traceable back to the invoice. Larger invoice IDs grow naturally and
+ * stay >= 10 characters.
+ *
+ * The callback identifies the invoice via its own `invoice_id` query
+ * parameter (not this order_id), so this mapping is purely informational and
+ * safe to keep deterministic across retries.
+ *
+ * @param int|string $invoiceId
+ *
+ * @return string
+ */
+function _moneybag_order_id($invoiceId)
+{
+    return 'WHMCS' . str_pad((string) $invoiceId, 5, '0', STR_PAD_LEFT);
 }
 
 /**

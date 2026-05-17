@@ -19,7 +19,9 @@
  */
 
 require __DIR__ . '/bootstrap.php';
-require MONEYBAG_MODULE_ROOT . '/modules/gateways/moneybag/lib/loader.php';
+// Require the gateway module so we exercise the real order_id builder
+// (it pulls in the bundled SDK loader itself).
+require MONEYBAG_MODULE_ROOT . '/modules/gateways/moneybag.php';
 
 $apiKey = getenv('MONEYBAG_API_KEY');
 if (!$apiKey) {
@@ -38,7 +40,13 @@ echo "Base URL: " . $client->getBaseUrl() . "\n";
 /* --------------------------------------------------------------------- */
 t_section('checkout() — create a payment session');
 
-$invoiceId = 'whmcs-e2e-' . date('YmdHis');
+// Use a short numeric invoice id (like a real WHMCS invoice) and let the
+// gateway's _moneybag_order_id() build the >= 10 char order_id Moneybag
+// requires. A time-derived number keeps each run's order_id unique.
+$invoiceId = (int) substr((string) time(), -6);
+$orderId   = _moneybag_order_id($invoiceId);
+echo "Invoice id: {$invoiceId}  ->  order_id: {$orderId} (" . strlen($orderId) . " chars)\n";
+t_ok(strlen($orderId) >= 10, 'order_id meets Moneybag 10-char minimum');
 
 $customer = new MoneybagSdk_Customer();
 $customer->setName('WHMCS E2E Tester');
@@ -50,7 +58,7 @@ $customer->setCountry('Bangladesh');
 $customer->setPhone('+8801700000000');
 
 $req = new MoneybagSdk_CheckoutRequest();
-$req->setOrderId($invoiceId);
+$req->setOrderId($orderId);
 $req->setCurrency('BDT');
 $req->setOrderAmount('10.00');
 $req->setOrderDescription('WHMCS module e2e test ' . $invoiceId);
