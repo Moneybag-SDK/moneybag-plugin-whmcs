@@ -7,7 +7,8 @@
 Official [Moneybag](https://moneybag.com.bd) payment gateway module for **WHMCS**.
 Accept secure payments for hosting, domains, and recurring services in Bangladesh.
 
-> ℹ️ **v1.0.0** — first stable release, verified end-to-end against the
+> ℹ️ **v1.0.1** — fixes the Pay button dropping the checkout session (customers saw
+> "This checkout link is not valid" on 1.0.0). First stable release 1.0.0 was verified end-to-end against the
 > Moneybag sandbox. It bundles a pre-1.0 build of the Moneybag PHP SDK; as
 > with any payment gateway, test in the staging environment before going live.
 

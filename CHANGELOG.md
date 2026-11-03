@@ -5,6 +5,17 @@ in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1] - 2026-11-03
+
+### Fixed
+
+- The **Pay Now** button dropped the checkout `session_id`, so customers
+  landed on a bare `/checkout` page showing "This checkout link is not
+  valid". The button was a GET `<form>` whose `action` already contained
+  `?session_id=...`; browsers discard that query string on GET form
+  submission. It is now a plain link to the full `checkout_url`.
+- Added a regression test (`tests/test_offline.php`) for the rendered button.
+
 ## [1.0.0] - 2026-05-17
 
 First stable release. Folds in all beta fixes; verified end-to-end against

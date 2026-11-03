@@ -141,11 +141,7 @@ function moneybag_link($params)
             ], 'Checkout Created');
         }
 
-        $checkoutUrl = htmlspecialchars($response->getCheckoutUrl(), ENT_QUOTES, 'UTF-8');
-
-        return '<form action="' . $checkoutUrl . '" method="get">'
-            . '<input type="submit" value="' . htmlspecialchars($langPayNow, ENT_QUOTES, 'UTF-8') . '" />'
-            . '</form>';
+        return _moneybag_pay_button($response->getCheckoutUrl(), $langPayNow);
     } catch (MoneybagSdk_MoneybagException $e) {
         if ($debugLogging) {
             logTransaction($moduleName, [
@@ -179,6 +175,27 @@ function moneybag_refund($params)
             . 'Moneybag merchant dashboard. Automated refunds are not supported '
             . 'by the gateway API yet.',
     ];
+}
+
+/**
+ * Render the "Pay Now" button for a Moneybag checkout URL.
+ *
+ * This is a plain link, NOT a GET form. The checkout URL already carries the
+ * session as a query string (".../checkout?session_id=..."), and browsers
+ * replace the query string in a GET form's action with the form's own fields.
+ * A form with no fields therefore sent customers to a bare ".../checkout",
+ * which the hosted page rejects as "This checkout link is not valid".
+ *
+ * @param string $checkoutUrl Full hosted-checkout URL from the API.
+ * @param string $label       Button label.
+ *
+ * @return string
+ */
+function _moneybag_pay_button($checkoutUrl, $label)
+{
+    return '<a class="btn btn-primary" href="' . htmlspecialchars($checkoutUrl, ENT_QUOTES, 'UTF-8') . '">'
+        . htmlspecialchars($label, ENT_QUOTES, 'UTF-8')
+        . '</a>';
 }
 
 /**
