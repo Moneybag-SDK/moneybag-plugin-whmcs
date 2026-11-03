@@ -76,6 +76,24 @@ t_ok(strlen($oidShort) >= 10, 'Typical invoice id yields >= 10 chars');
 t_ok(strlen($oidBig) >= 10 && strpos($oidBig, '1234567') !== false, 'Large invoice id stays >= 10 and traceable');
 
 /* --------------------------------------------------------------------- */
+t_section('Pay button keeps the checkout session_id (regression)');
+
+// A GET <form action="...?session_id=X"> makes browsers discard the query
+// string in `action`, sending customers to a bare /checkout ("checkout link
+// is not valid"). The button must navigate to the full checkout_url.
+$checkoutUrl = 'https://sandbox.payment.moneybag.com.bd/checkout?session_id=abc123-DEF_456';
+$button      = _moneybag_pay_button($checkoutUrl, 'Pay Now');
+
+t_ok(strpos($button, 'session_id=abc123-DEF_456') !== false, 'Pay button contains the full checkout_url with session_id');
+t_ok(stripos($button, '<form') === false, 'Pay button is not a GET form (would drop the query string)');
+t_ok(strpos($button, 'href="' . $checkoutUrl . '"') !== false, 'Pay button links to the exact checkout_url');
+t_ok(strpos($button, 'Pay Now') !== false, 'Pay button shows the label');
+
+$xss = _moneybag_pay_button('https://x.test/checkout?session_id=1&a="><script>', '<b>Pay</b>');
+t_ok(strpos($xss, '<script>') === false && strpos($xss, '<b>') === false, 'Pay button escapes URL and label');
+t_ok(strpos($xss, '&amp;a=') !== false, 'Pay button HTML-escapes ampersands in the URL');
+
+/* --------------------------------------------------------------------- */
 t_section('CheckoutRequest assembles a valid payload');
 
 $customer = new MoneybagSdk_Customer();
